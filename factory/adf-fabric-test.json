@@ -1,0 +1,9 @@
+{
+	"name": "adf-fabric-test",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6baf3a9e-7bb4-41a7-b38a-280767142092",
+		"tenantId": "183f60a6-5b19-44b3-a22a-666e66ef40a9"
+	}
+}
