@@ -1,20 +1,20 @@
 {
-	"name": "ds_raw_fabrictest_customers",
+	"name": "ds_landing_fabrictest_products",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_dl_fabrictest",
+			"referenceName": "ls_st_fabrictest",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "02 Raw"
+			"name": "01 Landing"
 		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": "customers.json",
-				"fileSystem": "raw"
+				"type": "AzureBlobStorageLocation",
+				"fileName": "products.json",
+				"container": "landing"
 			}
 		},
 		"schema": {}
