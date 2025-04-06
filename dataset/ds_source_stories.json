@@ -5,6 +5,9 @@
 			"referenceName": "ls_dl_fabrictest",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Misc"
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
