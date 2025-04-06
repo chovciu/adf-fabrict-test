@@ -1,0 +1,41 @@
+{
+	"name": "ds_landing_orders",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_st_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "orders.parquet",
+				"container": "landing"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "ORDER_ID",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORDER_DATETIME",
+				"type": "UTF8"
+			},
+			{
+				"name": "CUSTOMER_ID",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORDER_STATUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "STORE_ID",
+				"type": "UTF8"
+			}
+		]
+	}
+}
