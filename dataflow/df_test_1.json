@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "df_test_1",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -14,6 +14,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "ds_sink_order_items_df",
+						"type": "DatasetReference"
+					},
 					"name": "OrderItemsTestSink"
 				}
 			],
@@ -31,6 +35,9 @@
 				"     ignoreNoFilesFound: false) ~> OrderItemsRaw",
 				"OrderItemsRaw sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> OrderItemsTestSink"
 			]
