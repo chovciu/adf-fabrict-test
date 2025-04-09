@@ -1,0 +1,23 @@
+{
+	"name": "ds_cleansed_orders_partitions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dl_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "03 Landing"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "orders_partitions",
+				"fileSystem": "cleansed"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
