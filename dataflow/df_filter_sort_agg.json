@@ -24,6 +24,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "source3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_cleansed_orders",
+						"type": "DatasetReference"
+					},
+					"name": "Orders"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_cleansed_customers",
+						"type": "DatasetReference"
+					},
+					"name": "Customers"
 				}
 			],
 			"sinks": [],
@@ -36,6 +50,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "join1"
 				}
 			],
 			"scriptLines": [
@@ -73,13 +90,40 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> source3",
+				"source(output(",
+				"          ORDER_ID as integer,",
+				"          ORDER_DATE as date,",
+				"          CUSTOMER_ID as integer,",
+				"          STORE_ID as integer,",
+				"          UPDATED_TIMESTAMP as timestamp,",
+				"          ORDER_STATUS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> Orders",
+				"source(output(",
+				"          CUSTOMER_ID as integer,",
+				"          EMAIL_ADDRESS as string,",
+				"          FULL_NAME as string,",
+				"          UPDATED_TIMESTAMP as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> Customers",
 				"source1 filter(/* ORDER_STATUS == 'REFUNDED' || ORDER_STATUS == 'CANCELLED' */\r",
 				"/* ORDER_DATE ==toDate('2022-01-07') */\r",
 				"and(ORDER_DATE ==toDate('2022-01-07'), ORDER_STATUS == 'CANCELLED')) ~> filter1",
 				"source2 sort(desc(UNIT_PRICE, false)) ~> sort1",
 				"source3 aggregate(groupBy(ORDER_ID),",
 				"     TOTAL_ORDER_QUANTITY = sum(QUANTITY),",
-				"          MIN_UNIT_PRICE_IN_ORDER = min(UNIT_PRICE)) ~> aggregate1"
+				"          MIN_UNIT_PRICE_IN_ORDER = min(UNIT_PRICE)) ~> aggregate1",
+				"Orders, Customers join(Orders@CUSTOMER_ID == Customers@CUSTOMER_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1"
 			]
 		}
 	}
