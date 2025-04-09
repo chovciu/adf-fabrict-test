@@ -1,5 +1,5 @@
 {
-	"name": "df_filter_sort",
+	"name": "df_filter_sort_agg",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_cleansed_order_items",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
 				}
 			],
 			"sinks": [],
@@ -26,6 +33,9 @@
 				},
 				{
 					"name": "sort1"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -52,10 +62,24 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> source2",
+				"source(output(",
+				"          ORDER_ID as integer,",
+				"          PRODUCT_ID as integer,",
+				"          UNIT_PRICE as double,",
+				"          QUANTITY as integer,",
+				"          UPDATED_TIMESTAMP as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source3",
 				"source1 filter(/* ORDER_STATUS == 'REFUNDED' || ORDER_STATUS == 'CANCELLED' */\r",
 				"/* ORDER_DATE ==toDate('2022-01-07') */\r",
 				"and(ORDER_DATE ==toDate('2022-01-07'), ORDER_STATUS == 'CANCELLED')) ~> filter1",
-				"source2 sort(desc(UNIT_PRICE, false)) ~> sort1"
+				"source2 sort(desc(UNIT_PRICE, false)) ~> sort1",
+				"source3 aggregate(groupBy(ORDER_ID),",
+				"     TOTAL_ORDER_QUANTITY = sum(QUANTITY),",
+				"          MIN_UNIT_PRICE_IN_ORDER = min(UNIT_PRICE)) ~> aggregate1"
 			]
 		}
 	}
