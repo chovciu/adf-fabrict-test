@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "cleansedToStructured",
+				"name": "cleansed To Structured",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {

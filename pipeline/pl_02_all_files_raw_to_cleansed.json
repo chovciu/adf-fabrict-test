@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "dataflow raw to cleansed",
+				"name": "raw to cleansed",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
