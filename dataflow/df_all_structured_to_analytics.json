@@ -26,10 +26,52 @@
 					"name": "StructuredProducts"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_analytics_products_orders_monthly",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_analytics_stores_orders_monthly",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derMonthYear"
+				},
+				{
+					"name": "SelectColumns"
+				},
+				{
+					"name": "JoinProductsOrders"
+				},
+				{
+					"name": "SumByProductMonthYearAndStatus"
+				},
+				{
+					"name": "ExcludeCancelled"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "JoinStoresOrders"
+				},
+				{
+					"name": "SumByStoresMontyYearStatus"
+				},
+				{
+					"name": "ExcludeCancelledO"
+				},
+				{
+					"name": "sort2"
 				}
 			],
 			"scriptLines": [
@@ -71,7 +113,60 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> StructuredProducts",
-				"StructuredOrders derive(MONTH_YEAR = concatWS(\"-\",toString(month(ORDER_DATE)), toString(year(ORDER_DATE)))) ~> derMonthYear"
+				"StructuredOrders derive(MONTH_YEAR = concatWS(\"-\",iif(month(ORDER_DATE) >= 10, toString(month(ORDER_DATE)), concat(\"0\",toString(month(ORDER_DATE)))), toString(year(ORDER_DATE)))) ~> derMonthYear",
+				"derMonthYear select(mapColumn(",
+				"          STORE_ID,",
+				"          ORDER_STATUS,",
+				"          PRODUCT_ID,",
+				"          SUBTOTAL,",
+				"          MONTH_YEAR",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+				"StructuredProducts, SelectColumns join(StructuredProducts@PRODUCT_ID == SelectColumns@PRODUCT_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinProductsOrders",
+				"JoinProductsOrders aggregate(groupBy(PRODUCT_NAME,",
+				"          MONTH_YEAR,",
+				"          ORDER_STATUS),",
+				"     TOTAL_AMOUNT = round(sum(SUBTOTAL),2)) ~> SumByProductMonthYearAndStatus",
+				"SumByProductMonthYearAndStatus filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelled",
+				"ExcludeCancelled sort(asc(PRODUCT_NAME, true),",
+				"     desc(MONTH_YEAR, true),",
+				"     asc(ORDER_STATUS, true)) ~> sort1",
+				"StructuredStores, SelectColumns join(StructuredStores@STORE_ID == SelectColumns@STORE_ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinStoresOrders",
+				"JoinStoresOrders aggregate(groupBy(STORE_NAME,",
+				"          LATITUDE,",
+				"          LONGITUDE,",
+				"          ORDER_STATUS,",
+				"          MONTH_YEAR),",
+				"     TOTAL_AMOUNT = sum(SUBTOTAL)) ~> SumByStoresMontyYearStatus",
+				"SumByStoresMontyYearStatus filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelledO",
+				"ExcludeCancelledO sort(asc(STORE_NAME, true),",
+				"     asc(LATITUDE, true),",
+				"     asc(LONGITUDE, true),",
+				"     desc(MONTH_YEAR, true),",
+				"     asc(ORDER_STATUS, true)) ~> sort2",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"sort2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}
