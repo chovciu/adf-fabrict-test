@@ -1,20 +1,19 @@
 {
-	"name": "ds_cleansed_customers",
+	"name": "ds_temp_sink",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_dl_fabrictest",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "03 Cleansed"
+			"name": "Misc"
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "customers",
-				"fileSystem": "cleansed"
+				"fileSystem": "tempsink"
 			},
 			"compressionCodec": "snappy"
 		},

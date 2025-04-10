@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "03 Landing"
+			"name": "03 Cleansed"
 		},
 		"annotations": [],
 		"type": "Parquet",
