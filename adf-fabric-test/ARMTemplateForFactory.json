@@ -71,6 +71,57 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_all_files_clenased_to_structured')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "cleansedToStructured",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:10:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_all_cleansed_to_structured",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"orders": {},
+									"orderitems": {},
+									"stores": {},
+									"products": {},
+									"StructuredOrdersSink": {},
+									"StructuredStoresSink": {},
+									"StructuredProducts": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_all_cleansed_to_structured')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_all_files_landing_to_raw')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -714,6 +765,68 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_analytics_products_orders_monthly')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dl_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "05 Analytics"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "products_orders_monthly",
+						"fileSystem": "analytics"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_analytics_stores_orders_monthly')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dl_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "05 Analytics"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "stores_orders_monthly",
+						"fileSystem": "analytics"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_cleansed_customers')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -735,7 +848,24 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "CUSTOMER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "EMAIL_ADDRESS",
+						"type": "UTF8"
+					},
+					{
+						"name": "FULL_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -763,7 +893,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ORDER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "PRODUCT_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "INT32"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -791,7 +942,32 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ORDER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "ORDER_DATE",
+						"type": "DATE"
+					},
+					{
+						"name": "CUSTOMER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "STORE_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					},
+					{
+						"name": "ORDER_STATUS",
+						"type": "UTF8"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -847,7 +1023,24 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "PRODUCT_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "PRODUCT_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATE_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -875,7 +1068,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "STORE_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "STORE_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "LATITUDE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "LONGITUDE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATE_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -1339,7 +1553,48 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ORDER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "ORDER_DATE",
+						"type": "DATE"
+					},
+					{
+						"name": "CUSTOMER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "STORE_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "ORDER_STATUS",
+						"type": "UTF8"
+					},
+					{
+						"name": "PRODUCT_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "INT32"
+					},
+					{
+						"name": "SUBTOTAL",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -1367,7 +1622,24 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "PRODUCT_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "PRODUCT_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATE_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -1395,7 +1667,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "STORE_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "STORE_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "LATITUDE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "LONGITUDE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATE_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -1457,6 +1750,219 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_all_cleansed_to_structured')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_cleansed_orders",
+								"type": "DatasetReference"
+							},
+							"name": "orders"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_cleansed_order_items",
+								"type": "DatasetReference"
+							},
+							"name": "orderitems"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_cleansed_stores",
+								"type": "DatasetReference"
+							},
+							"name": "stores"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_cleansed_products",
+								"type": "DatasetReference"
+							},
+							"name": "products"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_structured_orders",
+								"type": "DatasetReference"
+							},
+							"name": "StructuredOrdersSink"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_structured_stores",
+								"type": "DatasetReference"
+							},
+							"name": "StructuredStoresSink"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_structured_products",
+								"type": "DatasetReference"
+							},
+							"name": "StructuredProducts"
+						}
+					],
+					"transformations": [
+						{
+							"name": "OrderWithOrderItem"
+						},
+						{
+							"name": "orderDropColumns"
+						},
+						{
+							"name": "orderItemDropColumns"
+						},
+						{
+							"name": "CalcSubtotalAndTimeStamp"
+						},
+						{
+							"name": "CalcTimeStamp"
+						},
+						{
+							"name": "CalcTimeStampP"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ORDER_ID as integer,",
+						"          ORDER_DATE as date,",
+						"          CUSTOMER_ID as integer,",
+						"          STORE_ID as integer,",
+						"          UPDATED_TIMESTAMP as timestamp,",
+						"          ORDER_STATUS as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> orders",
+						"source(output(",
+						"          ORDER_ID as integer,",
+						"          PRODUCT_ID as integer,",
+						"          UNIT_PRICE as double,",
+						"          QUANTITY as integer,",
+						"          UPDATED_TIMESTAMP as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> orderitems",
+						"source(output(",
+						"          STORE_ID as integer,",
+						"          STORE_NAME as string,",
+						"          LATITUDE as double,",
+						"          LONGITUDE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> stores",
+						"source(output(",
+						"          PRODUCT_ID as integer,",
+						"          PRODUCT_NAME as string,",
+						"          UNIT_PRICE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> products",
+						"orderDropColumns, orderItemDropColumns join(orderDropColumns@ORDER_ID == orderItemDropColumns@ORDER_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> OrderWithOrderItem",
+						"orders select(mapColumn(",
+						"          ORDER_ID,",
+						"          ORDER_DATE,",
+						"          CUSTOMER_ID,",
+						"          STORE_ID,",
+						"          ORDER_STATUS",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> orderDropColumns",
+						"orderitems select(mapColumn(",
+						"          ORDER_ID,",
+						"          PRODUCT_ID,",
+						"          UNIT_PRICE,",
+						"          QUANTITY",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> orderItemDropColumns",
+						"OrderWithOrderItem derive(SUBTOTAL = UNIT_PRICE * QUANTITY,",
+						"          UPDATED_TIMESTAMP = currentUTC()) ~> CalcSubtotalAndTimeStamp",
+						"stores derive(UPDATE_TIMESTAMP = currentUTC()) ~> CalcTimeStamp",
+						"products derive(UPDATE_TIMESTAMP = currentUTC()) ~> CalcTimeStampP",
+						"CalcSubtotalAndTimeStamp sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ORDER_ID as integer,",
+						"          ORDER_DATE as date,",
+						"          CUSTOMER_ID as integer,",
+						"          STORE_ID as integer,",
+						"          ORDER_STATUS as string,",
+						"          PRODUCT_ID as integer,",
+						"          UNIT_PRICE as double,",
+						"          QUANTITY as integer,",
+						"          SUBTOTAL as double,",
+						"          UPDATED_TIMESTAMP as timestamp",
+						"     ),",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> StructuredOrdersSink",
+						"CalcTimeStamp sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          STORE_ID as integer,",
+						"          STORE_NAME as string,",
+						"          LATITUDE as double,",
+						"          LONGITUDE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> StructuredStoresSink",
+						"CalcTimeStampP sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          PRODUCT_ID as integer,",
+						"          PRODUCT_NAME as string,",
+						"          UNIT_PRICE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> StructuredProducts"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_cleansed_orders')]",
+				"[concat(variables('factoryId'), '/datasets/ds_cleansed_order_items')]",
+				"[concat(variables('factoryId'), '/datasets/ds_cleansed_stores')]",
+				"[concat(variables('factoryId'), '/datasets/ds_cleansed_products')]",
+				"[concat(variables('factoryId'), '/datasets/ds_structured_orders')]",
+				"[concat(variables('factoryId'), '/datasets/ds_structured_stores')]",
+				"[concat(variables('factoryId'), '/datasets/ds_structured_products')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/df_all_raw_to_cleansed_parquet')]",
@@ -1708,6 +2214,14 @@
 						"CastDataTypesCustomers derive(UPDATED_TIMESTAMP = currentUTC()) ~> UpdatedTimestampCustomers",
 						"DropOrderDateTimeAndReorder sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          ORDER_ID as integer,",
+						"          ORDER_DATE as date,",
+						"          CUSTOMER_ID as integer,",
+						"          STORE_ID as integer,",
+						"          UPDATED_TIMESTAMP as timestamp,",
+						"          ORDER_STATUS as string",
+						"     ),",
 						"     format: 'parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1716,6 +2230,13 @@
 						"     skipDuplicateMapOutputs: true) ~> OrdersSink",
 						"DropLineItemID sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          ORDER_ID as integer,",
+						"          PRODUCT_ID as integer,",
+						"          UNIT_PRICE as double,",
+						"          QUANTITY as integer,",
+						"          UPDATED_TIMESTAMP as timestamp",
+						"     ),",
 						"     format: 'parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1724,6 +2245,12 @@
 						"     skipDuplicateMapOutputs: true) ~> OrdersItemSink",
 						"UpdatedTimestampCustomers sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          CUSTOMER_ID as integer,",
+						"          EMAIL_ADDRESS as string,",
+						"          FULL_NAME as string,",
+						"          UPDATED_TIMESTAMP as timestamp",
+						"     ),",
 						"     format: 'parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1732,6 +2259,12 @@
 						"     skipDuplicateMapOutputs: true) ~> CustomersSink",
 						"CastDataTypesProducts sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          PRODUCT_ID as integer,",
+						"          PRODUCT_NAME as string,",
+						"          UNIT_PRICE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
 						"     format: 'parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1740,6 +2273,13 @@
 						"     skipDuplicateMapOutputs: true) ~> ProductsSink",
 						"DropWebAddressAndReorder sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          STORE_ID as integer,",
+						"          STORE_NAME as string,",
+						"          LATITUDE as double,",
+						"          LONGITUDE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
 						"     format: 'parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1760,6 +2300,189 @@
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_customers')]",
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_products')]",
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_stores')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_all_structured_to_analytics')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_structured_orders",
+								"type": "DatasetReference"
+							},
+							"name": "StructuredOrders"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_structured_stores",
+								"type": "DatasetReference"
+							},
+							"name": "StructuredStores"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_structured_products",
+								"type": "DatasetReference"
+							},
+							"name": "StructuredProducts"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_analytics_products_orders_monthly",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_analytics_stores_orders_monthly",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derMonthYear"
+						},
+						{
+							"name": "SelectColumns"
+						},
+						{
+							"name": "JoinProductsOrders"
+						},
+						{
+							"name": "SumByProductMonthYearAndStatus"
+						},
+						{
+							"name": "sort1"
+						},
+						{
+							"name": "JoinStoresOrders"
+						},
+						{
+							"name": "SumByStoresMontyYearStatus"
+						},
+						{
+							"name": "sort2"
+						},
+						{
+							"name": "ExcludeCancelled"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ORDER_ID as integer,",
+						"          ORDER_DATE as date,",
+						"          CUSTOMER_ID as integer,",
+						"          STORE_ID as integer,",
+						"          ORDER_STATUS as string,",
+						"          PRODUCT_ID as integer,",
+						"          UNIT_PRICE as double,",
+						"          QUANTITY as integer,",
+						"          SUBTOTAL as double,",
+						"          UPDATED_TIMESTAMP as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     partitionRootPath: 'orders',",
+						"     format: 'parquet') ~> StructuredOrders",
+						"source(output(",
+						"          STORE_ID as integer,",
+						"          STORE_NAME as string,",
+						"          LATITUDE as double,",
+						"          LONGITUDE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> StructuredStores",
+						"source(output(",
+						"          PRODUCT_ID as integer,",
+						"          PRODUCT_NAME as string,",
+						"          UNIT_PRICE as double,",
+						"          UPDATE_TIMESTAMP as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> StructuredProducts",
+						"ExcludeCancelled derive(MONTH_YEAR = /* concatWS(\"-\",iif(month(ORDER_DATE) >= 10, toString(month(ORDER_DATE)), concat(\"0\",toString(month(ORDER_DATE)))), toString(year(ORDER_DATE))) */\r",
+						"toString(ORDER_DATE, \"MM-YYYY\")) ~> derMonthYear",
+						"derMonthYear select(mapColumn(",
+						"          STORE_ID,",
+						"          ORDER_STATUS,",
+						"          PRODUCT_ID,",
+						"          SUBTOTAL,",
+						"          MONTH_YEAR",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+						"StructuredProducts, SelectColumns join(StructuredProducts@PRODUCT_ID == SelectColumns@PRODUCT_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> JoinProductsOrders",
+						"JoinProductsOrders aggregate(groupBy(PRODUCT_NAME,",
+						"          MONTH_YEAR,",
+						"          ORDER_STATUS),",
+						"     TOTAL_AMOUNT = round(sum(SUBTOTAL),2)) ~> SumByProductMonthYearAndStatus",
+						"SumByProductMonthYearAndStatus sort(asc(PRODUCT_NAME, true),",
+						"     desc(MONTH_YEAR, true),",
+						"     asc(ORDER_STATUS, true)) ~> sort1",
+						"StructuredStores, SelectColumns join(StructuredStores@STORE_ID == SelectColumns@STORE_ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> JoinStoresOrders",
+						"JoinStoresOrders aggregate(groupBy(STORE_NAME,",
+						"          LATITUDE,",
+						"          LONGITUDE,",
+						"          ORDER_STATUS,",
+						"          MONTH_YEAR),",
+						"     TOTAL_AMOUNT = round(sum(SUBTOTAL),2)) ~> SumByStoresMontyYearStatus",
+						"SumByStoresMontyYearStatus sort(asc(STORE_NAME, true),",
+						"     asc(LATITUDE, true),",
+						"     asc(LONGITUDE, true),",
+						"     desc(MONTH_YEAR, true),",
+						"     asc(ORDER_STATUS, true)) ~> sort2",
+						"StructuredOrders filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelled",
+						"sort1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['productsOrdersMonthly.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1",
+						"sort2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['storesOrdersMonthly.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_structured_orders')]",
+				"[concat(variables('factoryId'), '/datasets/ds_structured_stores')]",
+				"[concat(variables('factoryId'), '/datasets/ds_structured_products')]",
+				"[concat(variables('factoryId'), '/datasets/ds_analytics_products_orders_monthly')]",
+				"[concat(variables('factoryId'), '/datasets/ds_analytics_stores_orders_monthly')]"
 			]
 		},
 		{
@@ -2145,6 +2868,14 @@
 						"     skipDuplicateMapOutputs: true) ~> DropOrderDateTimeAndReorder",
 						"DropOrderDateTimeAndReorder sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     input(",
+						"          ORDER_ID as integer,",
+						"          ORDER_DATE as date,",
+						"          CUSTOMER_ID as integer,",
+						"          STORE_ID as integer,",
+						"          UPDATED_TIMESTAMP as timestamp,",
+						"          ORDER_STATUS as string",
+						"     ),",
 						"     format: 'parquet',",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -2161,6 +2892,55 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_raw_orders')]",
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_orders')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_all_structrured_to_analytics')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "structured to analytics",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:10:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_all_structured_to_analytics",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"StructuredOrders": {},
+									"StructuredStores": {},
+									"StructuredProducts": {},
+									"sink1": {},
+									"sink2": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_all_structured_to_analytics')]"
 			]
 		}
 	]

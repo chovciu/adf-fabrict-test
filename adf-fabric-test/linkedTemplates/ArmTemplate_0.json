@@ -55,6 +55,68 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_analytics_products_orders_monthly')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dl_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "05 Analytics"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "products_orders_monthly",
+						"fileSystem": "analytics"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_analytics_stores_orders_monthly')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dl_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "05 Analytics"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "stores_orders_monthly",
+						"fileSystem": "analytics"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_cleansed_customers')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -76,7 +138,24 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "CUSTOMER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "EMAIL_ADDRESS",
+						"type": "UTF8"
+					},
+					{
+						"name": "FULL_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -104,7 +183,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ORDER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "PRODUCT_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "INT32"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -132,7 +232,32 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ORDER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "ORDER_DATE",
+						"type": "DATE"
+					},
+					{
+						"name": "CUSTOMER_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "STORE_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "INT96"
+					},
+					{
+						"name": "ORDER_STATUS",
+						"type": "UTF8"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -188,7 +313,24 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "PRODUCT_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "PRODUCT_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATE_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -216,7 +358,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "STORE_ID",
+						"type": "INT32"
+					},
+					{
+						"name": "STORE_NAME",
+						"type": "UTF8"
+					},
+					{
+						"name": "LATITUDE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "LONGITUDE",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "UPDATE_TIMESTAMP",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
@@ -516,60 +679,6 @@
 					}
 				},
 				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_raw_json_files')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dl_fabrictest",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "02 Raw"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "raw"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_raw_orders')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dl_fabrictest",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "02 Raw"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "orders.parquet",
-						"fileSystem": "raw"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dl_fabrictest')]"
