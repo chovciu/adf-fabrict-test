@@ -56,9 +56,6 @@
 					"name": "SumByProductMonthYearAndStatus"
 				},
 				{
-					"name": "ExcludeCancelled"
-				},
-				{
 					"name": "sort1"
 				},
 				{
@@ -68,10 +65,10 @@
 					"name": "SumByStoresMontyYearStatus"
 				},
 				{
-					"name": "ExcludeCancelledO"
+					"name": "sort2"
 				},
 				{
-					"name": "sort2"
+					"name": "ExcludeCancelled"
 				}
 			],
 			"scriptLines": [
@@ -113,7 +110,8 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> StructuredProducts",
-				"StructuredOrders derive(MONTH_YEAR = concatWS(\"-\",iif(month(ORDER_DATE) >= 10, toString(month(ORDER_DATE)), concat(\"0\",toString(month(ORDER_DATE)))), toString(year(ORDER_DATE)))) ~> derMonthYear",
+				"ExcludeCancelled derive(MONTH_YEAR = /* concatWS(\"-\",iif(month(ORDER_DATE) >= 10, toString(month(ORDER_DATE)), concat(\"0\",toString(month(ORDER_DATE)))), toString(year(ORDER_DATE))) */\r",
+				"toString(ORDER_DATE, \"MM-YYYY\")) ~> derMonthYear",
 				"derMonthYear select(mapColumn(",
 				"          STORE_ID,",
 				"          ORDER_STATUS,",
@@ -132,8 +130,7 @@
 				"          MONTH_YEAR,",
 				"          ORDER_STATUS),",
 				"     TOTAL_AMOUNT = round(sum(SUBTOTAL),2)) ~> SumByProductMonthYearAndStatus",
-				"SumByProductMonthYearAndStatus filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelled",
-				"ExcludeCancelled sort(asc(PRODUCT_NAME, true),",
+				"SumByProductMonthYearAndStatus sort(asc(PRODUCT_NAME, true),",
 				"     desc(MONTH_YEAR, true),",
 				"     asc(ORDER_STATUS, true)) ~> sort1",
 				"StructuredStores, SelectColumns join(StructuredStores@STORE_ID == SelectColumns@STORE_ID,",
@@ -147,12 +144,12 @@
 				"          ORDER_STATUS,",
 				"          MONTH_YEAR),",
 				"     TOTAL_AMOUNT = round(sum(SUBTOTAL),2)) ~> SumByStoresMontyYearStatus",
-				"SumByStoresMontyYearStatus filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelledO",
-				"ExcludeCancelledO sort(asc(STORE_NAME, true),",
+				"SumByStoresMontyYearStatus sort(asc(STORE_NAME, true),",
 				"     asc(LATITUDE, true),",
 				"     asc(LONGITUDE, true),",
 				"     desc(MONTH_YEAR, true),",
 				"     asc(ORDER_STATUS, true)) ~> sort2",
+				"StructuredOrders filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelled",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['productsOrdersMonthly.csv'],",
