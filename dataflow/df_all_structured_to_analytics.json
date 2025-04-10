@@ -146,7 +146,7 @@
 				"          LONGITUDE,",
 				"          ORDER_STATUS,",
 				"          MONTH_YEAR),",
-				"     TOTAL_AMOUNT = sum(SUBTOTAL)) ~> SumByStoresMontyYearStatus",
+				"     TOTAL_AMOUNT = round(sum(SUBTOTAL),2)) ~> SumByStoresMontyYearStatus",
 				"SumByStoresMontyYearStatus filter(ORDER_STATUS != \"CANCELLED\") ~> ExcludeCancelledO",
 				"ExcludeCancelledO sort(asc(STORE_NAME, true),",
 				"     asc(LATITUDE, true),",
