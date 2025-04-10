@@ -1,20 +1,20 @@
 {
-	"name": "ds_cleansed_orders_partitions",
+	"name": "ds_structured_products",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_dl_fabrictest",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "03 Cleansed"
+			"name": "04 Structured"
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "orders_partitions",
-				"fileSystem": "cleansed"
+				"folderPath": "products",
+				"fileSystem": "structured"
 			},
 			"compressionCodec": "snappy"
 		},
