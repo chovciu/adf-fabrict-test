@@ -27,7 +27,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derMonthYear"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          ORDER_ID as integer,",
@@ -44,6 +48,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
+				"     partitionRootPath: 'orders',",
 				"     format: 'parquet') ~> StructuredOrders",
 				"source(output(",
 				"          STORE_ID as integer,",
@@ -65,7 +70,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> StructuredProducts"
+				"     format: 'parquet') ~> StructuredProducts",
+				"StructuredOrders derive(MONTH_YEAR = concatWS(\"-\",toString(month(ORDER_DATE)), toString(year(ORDER_DATE)))) ~> derMonthYear"
 			]
 		}
 	}
