@@ -13,6 +13,31 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_landing_fabrictest_stores')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_st_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "01 Landing"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "stores.json",
+						"container": "landing"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_landing_json_files')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -654,73 +679,6 @@
 					}
 				},
 				"schema": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_structured_orders')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dl_fabrictest",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "04 Structured"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "orders",
-						"fileSystem": "structured"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": [
-					{
-						"name": "ORDER_ID",
-						"type": "INT32"
-					},
-					{
-						"name": "ORDER_DATE",
-						"type": "DATE"
-					},
-					{
-						"name": "CUSTOMER_ID",
-						"type": "INT32"
-					},
-					{
-						"name": "STORE_ID",
-						"type": "INT32"
-					},
-					{
-						"name": "ORDER_STATUS",
-						"type": "UTF8"
-					},
-					{
-						"name": "PRODUCT_ID",
-						"type": "INT32"
-					},
-					{
-						"name": "UNIT_PRICE",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "INT32"
-					},
-					{
-						"name": "SUBTOTAL",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "UPDATED_TIMESTAMP",
-						"type": "INT96"
-					}
-				]
 			},
 			"dependsOn": []
 		}

@@ -15,9 +15,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_st_fabrictest'"
 		},
+		"ls_sql_fabrictest_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sql_fabrictest'"
+		},
 		"ls_dl_fabrictest_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlfabrictest0001.dfs.core.windows.net/"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserver-fabrictest.database.windows.net"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb-fabrictest"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "fabrictest"
 		}
 	},
 	"variables": {
@@ -132,6 +148,28 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('ls_st_fabrictest_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sql_fabrictest')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_sql_fabrictest_properties_typeProperties_server')]",
+					"database": "[parameters('ls_sql_fabrictest_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_sql_fabrictest_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sql_fabrictest_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -799,33 +837,6 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"fileName": "products.json",
-						"container": "landing"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_st_fabrictest')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_landing_fabrictest_stores')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_st_fabrictest",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "01 Landing"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "stores.json",
 						"container": "landing"
 					}
 				},

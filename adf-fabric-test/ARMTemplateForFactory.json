@@ -15,9 +15,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_st_fabrictest'"
 		},
+		"ls_sql_fabrictest_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sql_fabrictest'"
+		},
 		"ls_dl_fabrictest_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlfabrictest0001.dfs.core.windows.net/"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserver-fabrictest.database.windows.net"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb-fabrictest"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "fabrictest"
 		}
 	},
 	"variables": {
@@ -5770,6 +5786,204 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_raw_orders')]",
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_orders')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sql_fabrictest')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_sql_fabrictest_properties_typeProperties_server')]",
+					"database": "[parameters('ls_sql_fabrictest_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_sql_fabrictest_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sql_fabrictest_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_orders')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "06 SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ORDER_ITEM_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ORDER_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ORDER_DATE",
+						"type": "date"
+					},
+					{
+						"name": "CUSTOMER_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ORDER_STATUS",
+						"type": "varchar"
+					},
+					{
+						"name": "STORE_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PRODUCT_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "QUANTITY",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SUBTOTAL",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "ORDERS",
+					"table": "ORDERS"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_fabrictest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_products')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "06 SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "PRODUCT_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PRODUCT_NAME",
+						"type": "varchar"
+					},
+					{
+						"name": "UNIT_PRICE",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "ORDERS",
+					"table": "PRODUCTS"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_fabrictest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_stores')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_fabrictest",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "06 SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "STORE_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "STORE_NAME",
+						"type": "varchar"
+					},
+					{
+						"name": "LATITUDE",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "LONGITUDE",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "UPDATED_TIMESTAMP",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "ORDERS",
+					"table": "STORES"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_fabrictest')]"
 			]
 		}
 	]

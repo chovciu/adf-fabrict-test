@@ -15,9 +15,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_st_fabrictest'"
 		},
+		"ls_sql_fabrictest_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sql_fabrictest'"
+		},
 		"ls_dl_fabrictest_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlfabrictest0001.dfs.core.windows.net/"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserver-fabrictest.database.windows.net"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb-fabrictest"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "fabrictest"
 		},
 		"containerUri": {
 			"type": "string",
@@ -52,8 +68,20 @@
 					"ls_st_fabrictest_connectionString": {
 						"value": "[parameters('ls_st_fabrictest_connectionString')]"
 					},
+					"ls_sql_fabrictest_password": {
+						"value": "[parameters('ls_sql_fabrictest_password')]"
+					},
 					"ls_dl_fabrictest_properties_typeProperties_url": {
 						"value": "[parameters('ls_dl_fabrictest_properties_typeProperties_url')]"
+					},
+					"ls_sql_fabrictest_properties_typeProperties_server": {
+						"value": "[parameters('ls_sql_fabrictest_properties_typeProperties_server')]"
+					},
+					"ls_sql_fabrictest_properties_typeProperties_database": {
+						"value": "[parameters('ls_sql_fabrictest_properties_typeProperties_database')]"
+					},
+					"ls_sql_fabrictest_properties_typeProperties_userName": {
+						"value": "[parameters('ls_sql_fabrictest_properties_typeProperties_userName')]"
 					}
 				}
 			},

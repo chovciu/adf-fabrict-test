@@ -11,8 +11,20 @@
 		"ls_st_fabrictest_connectionString": {
 			"value": ""
 		},
+		"ls_sql_fabrictest_password": {
+			"value": ""
+		},
 		"ls_dl_fabrictest_properties_typeProperties_url": {
 			"value": "https://dlfabrictest0001.dfs.core.windows.net/"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_server": {
+			"value": "sqlserver-fabrictest.database.windows.net"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_database": {
+			"value": "sqldb-fabrictest"
+		},
+		"ls_sql_fabrictest_properties_typeProperties_userName": {
+			"value": "fabrictest"
 		},
 		"containerUri": {
 			"value": ""
