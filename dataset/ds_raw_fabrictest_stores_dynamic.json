@@ -14,10 +14,32 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "stores.json",
-				"folderPath": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+				"folderPath": {
+					"value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+					"type": "Expression"
+				},
 				"fileSystem": "raw"
 			}
 		},
-		"schema": {}
+		"schema": {
+			"type": "object",
+			"properties": {
+				"STORE_ID": {
+					"type": "string"
+				},
+				"STORE_NAME": {
+					"type": "string"
+				},
+				"WEB_ADDRESS": {
+					"type": "string"
+				},
+				"LATITUDE": {
+					"type": "string"
+				},
+				"LONGITUDE": {
+					"type": "string"
+				}
+			}
+		}
 	}
 }
