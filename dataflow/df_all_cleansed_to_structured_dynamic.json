@@ -54,6 +54,27 @@
 						"type": "DatasetReference"
 					},
 					"name": "StructuredProducts"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_orders",
+						"type": "DatasetReference"
+					},
+					"name": "sqlOrders"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_stores",
+						"type": "DatasetReference"
+					},
+					"name": "sqlStores"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_products",
+						"type": "DatasetReference"
+					},
+					"name": "sqlProducts"
 				}
 			],
 			"transformations": [
@@ -77,6 +98,9 @@
 				},
 				{
 					"name": "rearrangeColumns"
+				},
+				{
+					"name": "UpsertAll"
 				}
 			],
 			"scriptLines": [
@@ -167,6 +191,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> rearrangeColumns",
+				"rearrangeColumns alterRow(upsertIf(true())) ~> UpsertAll",
 				"rearrangeColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -223,7 +248,79 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> StructuredProducts"
+				"     partitionBy('hash', 1)) ~> StructuredProducts",
+				"UpsertAll sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ORDER_ITEM_ID as integer,",
+				"          ORDER_ID as integer,",
+				"          ORDER_DATE as date,",
+				"          CUSTOMER_ID as integer,",
+				"          ORDER_STATUS as string,",
+				"          STORE_ID as integer,",
+				"          PRODUCT_ID as integer,",
+				"          UNIT_PRICE as decimal(18,0),",
+				"          QUANTITY as integer,",
+				"          SUBTOTAL as decimal(18,0),",
+				"          UPDATED_TIMESTAMP as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['ORDER_ITEM_ID'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sqlOrders",
+				"CalcTimeStamp sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          STORE_ID as integer,",
+				"          STORE_NAME as string,",
+				"          LATITUDE as decimal(18,0),",
+				"          LONGITUDE as decimal(18,0),",
+				"          UPDATED_TIMESTAMP as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          STORE_ID,",
+				"          STORE_NAME,",
+				"          LATITUDE,",
+				"          LONGITUDE,",
+				"          UPDATED_TIMESTAMP = UPDATE_TIMESTAMP",
+				"     )) ~> sqlStores",
+				"CalcTimeStampP sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          PRODUCT_ID as integer,",
+				"          PRODUCT_NAME as string,",
+				"          UNIT_PRICE as decimal(18,0),",
+				"          UPDATED_TIMESTAMP as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          PRODUCT_ID,",
+				"          PRODUCT_NAME,",
+				"          UNIT_PRICE,",
+				"          UPDATED_TIMESTAMP = UPDATE_TIMESTAMP",
+				"     )) ~> sqlProducts"
 			]
 		}
 	}
