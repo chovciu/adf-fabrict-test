@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Json Stories files",
+				"name": "Copy Json Stories filesz",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
