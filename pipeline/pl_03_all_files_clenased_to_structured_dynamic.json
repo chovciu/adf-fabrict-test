@@ -27,6 +27,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Project Dynamic + SQL"
+		},
 		"annotations": []
 	}
 }
