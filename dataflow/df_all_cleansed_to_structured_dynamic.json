@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_cleansed_orders",
+						"referenceName": "ds_cleansed_orders_dynamic",
 						"type": "DatasetReference"
 					},
 					"name": "orders"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_cleansed_order_items",
+						"referenceName": "ds_cleansed_order_items_dynamic",
 						"type": "DatasetReference"
 					},
 					"name": "orderitems"
@@ -84,9 +84,9 @@
 				"          ORDER_ID as integer,",
 				"          ORDER_DATE as date,",
 				"          CUSTOMER_ID as integer,",
+				"          ORDER_STATUS as string,",
 				"          STORE_ID as integer,",
-				"          UPDATED_TIMESTAMP as timestamp,",
-				"          ORDER_STATUS as string",
+				"          UPDATED_TIMESTAMP as timestamp",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
