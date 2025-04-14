@@ -1793,7 +1793,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_execute_orders_dyamic')]",
+			"name": "[concat(parameters('factoryName'), '/pl_execute_orders_dynamic')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4289,14 +4289,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ds_cleansed_orders",
+								"referenceName": "ds_cleansed_orders_dynamic",
 								"type": "DatasetReference"
 							},
 							"name": "orders"
 						},
 						{
 							"dataset": {
-								"referenceName": "ds_cleansed_order_items",
+								"referenceName": "ds_cleansed_order_items_dynamic",
 								"type": "DatasetReference"
 							},
 							"name": "orderitems"
@@ -4367,9 +4367,9 @@
 						"          ORDER_ID as integer,",
 						"          ORDER_DATE as date,",
 						"          CUSTOMER_ID as integer,",
+						"          ORDER_STATUS as string,",
 						"          STORE_ID as integer,",
-						"          UPDATED_TIMESTAMP as timestamp,",
-						"          ORDER_STATUS as string",
+						"          UPDATED_TIMESTAMP as timestamp",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -4511,8 +4511,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_cleansed_orders')]",
-				"[concat(variables('factoryId'), '/datasets/ds_cleansed_order_items')]",
+				"[concat(variables('factoryId'), '/datasets/ds_cleansed_orders_dynamic')]",
+				"[concat(variables('factoryId'), '/datasets/ds_cleansed_order_items_dynamic')]",
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_stores_dynamic')]",
 				"[concat(variables('factoryId'), '/datasets/ds_cleansed_products_dynamic')]",
 				"[concat(variables('factoryId'), '/datasets/ds_structured_orders')]",
