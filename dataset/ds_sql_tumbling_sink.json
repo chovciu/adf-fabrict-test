@@ -1,0 +1,29 @@
+{
+	"name": "ds_sql_tumbling_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "06 SQL"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "window_name",
+				"type": "varchar"
+			},
+			{
+				"name": "window_time",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tw_sink"
+		}
+	}
+}
