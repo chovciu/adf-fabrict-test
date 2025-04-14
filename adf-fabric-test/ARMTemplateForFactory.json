@@ -4341,6 +4341,9 @@
 						},
 						{
 							"name": "CalcTimeStampP"
+						},
+						{
+							"name": "rearrangeColumns"
 						}
 					],
 					"scriptLines": [
@@ -4410,11 +4413,28 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> orderItemDropColumns",
-						"OrderWithOrderItem derive(SUBTOTAL = UNIT_PRICE * QUANTITY,",
+						"OrderWithOrderItem derive(ORDER_ITEM_ID = toInteger(concat(toString(orderDropColumns@ORDER_ID), toString(PRODUCT_ID))),",
+						"          SUBTOTAL = UNIT_PRICE * QUANTITY,",
 						"          UPDATED_TIMESTAMP = currentUTC()) ~> CalcSubtotalAndTimeStamp",
 						"stores derive(UPDATE_TIMESTAMP = currentUTC()) ~> CalcTimeStamp",
 						"products derive(UPDATE_TIMESTAMP = currentUTC()) ~> CalcTimeStampP",
-						"CalcSubtotalAndTimeStamp sink(allowSchemaDrift: true,",
+						"CalcSubtotalAndTimeStamp select(mapColumn(",
+						"          ORDER_ITEM_ID,",
+						"          ORDER_ID = orderDropColumns@ORDER_ID,",
+						"          ORDER_DATE,",
+						"          CUSTOMER_ID,",
+						"          STORE_ID,",
+						"          ORDER_STATUS,",
+						"          ORDER_ID = orderItemDropColumns@ORDER_ID,",
+						"          PRODUCT_ID,",
+						"          UNIT_PRICE,",
+						"          QUANTITY,",
+						"          SUBTOTAL,",
+						"          UPDATED_TIMESTAMP",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> rearrangeColumns",
+						"rearrangeColumns sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          ORDER_ID as integer,",
