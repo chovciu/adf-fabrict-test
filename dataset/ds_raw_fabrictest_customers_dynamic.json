@@ -1,0 +1,26 @@
+{
+	"name": "ds_raw_fabrictest_customers_dynamic",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dl_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "02 Raw Dynamic"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "customers.json",
+				"folderPath": {
+					"value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+					"type": "Expression"
+				},
+				"fileSystem": "raw"
+			}
+		},
+		"schema": {}
+	}
+}

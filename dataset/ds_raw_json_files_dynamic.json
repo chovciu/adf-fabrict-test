@@ -1,0 +1,22 @@
+{
+	"name": "ds_raw_json_files_dynamic",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dl_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "02 Raw Dynamic"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+				"fileSystem": "raw"
+			}
+		},
+		"schema": {}
+	}
+}

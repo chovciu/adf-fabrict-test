@@ -1,0 +1,24 @@
+{
+	"name": "ds_raw_orders_dynamic",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dl_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "02 Raw Dynamic"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "orders.parquet",
+				"folderPath": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+				"fileSystem": "raw"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

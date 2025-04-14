@@ -1,0 +1,27 @@
+{
+	"name": "ds_raw_fabrictest_items_dynamic",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dl_fabrictest",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "02 Raw Dynamic"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "order_items.txt",
+				"folderPath": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+				"fileSystem": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
