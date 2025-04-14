@@ -911,6 +911,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Project"
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -1374,6 +1377,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Project Dynamic + SQL"
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -1607,7 +1613,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy Json Stories files",
+						"name": "Copy Json Stories filesz",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
