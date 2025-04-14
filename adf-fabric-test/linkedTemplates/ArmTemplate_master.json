@@ -35,6 +35,14 @@
 			"type": "string",
 			"defaultValue": "fabrictest"
 		},
+		"trigger_tw_properties_pipeline_parameters_pEnd": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"trigger_tw_properties_pipeline_parameters_pStart": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -140,11 +148,37 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"trigger_tw_properties_pipeline_parameters_pEnd": {
+						"value": "[parameters('trigger_tw_properties_pipeline_parameters_pEnd')]"
+					},
+					"trigger_tw_properties_pipeline_parameters_pStart": {
+						"value": "[parameters('trigger_tw_properties_pipeline_parameters_pStart')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'adf-fabric-test_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "adf-fabric-test_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-fabric-test_ArmTemplate_3')]"
 			]
 		}
 	]
