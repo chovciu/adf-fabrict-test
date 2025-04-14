@@ -20,14 +20,14 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_cleansed_stores",
+						"referenceName": "ds_cleansed_stores_dynamic",
 						"type": "DatasetReference"
 					},
 					"name": "stores"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_cleansed_products",
+						"referenceName": "ds_cleansed_products_dynamic",
 						"type": "DatasetReference"
 					},
 					"name": "products"
