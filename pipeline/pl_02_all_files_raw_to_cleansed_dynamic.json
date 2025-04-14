@@ -1,13 +1,13 @@
 {
-	"name": "pl_03_all_files_clenased_to_structured_dynamic",
+	"name": "pl_02_all_files_raw_to_cleansed_dynamic",
 	"properties": {
 		"activities": [
 			{
-				"name": "cleansed To Structured",
+				"name": "raw to cleansed",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.00:10:00",
+					"timeout": "0.00:20:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_all_cleansed_to_structured_dynamic",
+						"referenceName": "df_all_raw_to_cleansed_parquet_dynamic",
 						"type": "DataFlowReference"
 					},
 					"compute": {

@@ -12,7 +12,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl_01_all_files_landing_to_raw",
+						"referenceName": "pl_01_all_files_landing_to_raw_dynamic",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
@@ -35,7 +35,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl_02_all_files_raw_to_cleansed",
+						"referenceName": "pl_02_all_files_raw_to_cleansed_dynamic",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
