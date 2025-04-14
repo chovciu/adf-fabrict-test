@@ -9,11 +9,11 @@
 		},
 		"trigger_tw_properties_pipeline_parameters_pEnd": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
+			"defaultValue": "@trigger().outputs.windowEndTime"
 		},
 		"trigger_tw_properties_pipeline_parameters_pStart": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
+			"defaultValue": "@trigger().outputs.windowStartTime"
 		}
 	},
 	"variables": {

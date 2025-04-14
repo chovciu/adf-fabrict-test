@@ -27,10 +27,10 @@
 			"value": "fabrictest"
 		},
 		"trigger_tw_properties_pipeline_parameters_pEnd": {
-			"value": "@trigger().outputs.windowStartTime"
+			"value": "@trigger().outputs.windowEndTime"
 		},
 		"trigger_tw_properties_pipeline_parameters_pStart": {
-			"value": "@trigger().outputs.windowEndTime"
+			"value": "@trigger().outputs.windowStartTime"
 		}
 	}
 }
