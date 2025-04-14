@@ -27,11 +27,11 @@
 				"type": "INT32"
 			},
 			{
-				"name": "EMAIL_ADDRESS",
+				"name": "FULL_NAME",
 				"type": "UTF8"
 			},
 			{
-				"name": "FULL_NAME",
+				"name": "EMAIL_ADDRESS",
 				"type": "UTF8"
 			},
 			{
